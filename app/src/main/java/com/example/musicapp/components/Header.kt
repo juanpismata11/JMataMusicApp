@@ -31,7 +31,6 @@ import com.example.musicapp.ui.theme.PurpleRadiante
 fun Header(){
     Column(
         modifier = Modifier
-            .padding(10.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(
@@ -82,7 +81,7 @@ fun Header(){
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp),
-                text = "Juan Frausto",
+                text = "Juan Pablo",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp
