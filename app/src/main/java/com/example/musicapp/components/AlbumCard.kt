@@ -1,7 +1,9 @@
 package com.example.musicapp.components
 
+import android.util.Log
 import android.view.RoundedCorner
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,10 @@ import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,35 +49,40 @@ import com.example.musicapp.ui.theme.surface
 @Composable
 fun AlbumCard(
     album: Album,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    paddingg: Int
 ){
     Box(
         modifier = Modifier
             .width(240.dp)
             .height(200.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.Black), // fallback si no hay imagen
+            .padding(end = paddingg.dp)
+            .clickable{
+                onClick()
+            },
         contentAlignment = Alignment.BottomCenter
     ) {
-        if (!album.image.isNullOrEmpty()) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(album.image)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Imagen del álbum",
-                modifier = Modifier
-                    .matchParentSize()
-                    .clip(RoundedCornerShape(24.dp)),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(Color.DarkGray)
-            )
-        }
+        AsyncImage(
+            model = "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg",
+            contentDescription = "Imagen no disponible",
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(24.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(album.image)
+                .crossfade(true)
+                .build(),
+            contentDescription = "Imagen del álbum",
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(24.dp)),
+            contentScale = ContentScale.Crop
+        )
 
         Box(
             modifier = Modifier
@@ -136,7 +147,8 @@ fun AlbumCardPreview(){
     MusicAppTheme {
         AlbumCard(
             album = testProduct,
-            onClick = {}
+            onClick = {},
+            paddingg = 24
         )
     }
 

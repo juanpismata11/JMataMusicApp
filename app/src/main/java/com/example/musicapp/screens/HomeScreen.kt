@@ -72,7 +72,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp)
-                .padding(top = 20.dp)
+                .padding(top = 40.dp)
         ) {
             Header()
 
@@ -100,19 +100,17 @@ fun HomeScreen(
                 loading = true
                 error = null
                 try {
-                    val retrofit = Retrofit.Builder()
-                        .baseUrl("https://music.juanfrausto.com/api/albums/")
+                    val retrofit = Retrofit
+                        .Builder()
+                        .baseUrl("https://music.juanfrausto.com/api/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build()
                     val service = retrofit.create(AlbumServices::class.java)
-
-                    Log.i("HomeScreen", "Llamando a getAllAlbums()...")
-
-                    albums = withContext(Dispatchers.IO) {
+                    val result = async(Dispatchers.IO) {
                         service.getAllAlbums()
                     }
-
-                    Log.i("HomeScreen", "Resultado: $albums")
+                    Log.i("HomeScreen", "Resultado: ${result.await()}")
+                    albums = result.await()
                 } catch (e: Exception) {
                     error = e.message ?: "Error desconocido"
                     Log.e("HomeScreen", "Error en API: $e")
@@ -131,18 +129,22 @@ fun HomeScreen(
             } else if (error != null) {
                 AlbumCard(
                     album = testProduct,
-                    onClick = {}
+                    onClick = {},
+                    paddingg = 24
                 )
             } else {
                 LazyRow(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 24.dp)
                 ) {
                     items(albums) { album ->
                         AlbumCard(
                             album = album,
                             onClick = {
                                 navController.navigate(AlbumDetailScreenRoute(album.id))
-                            }
+                            },
+                            paddingg = 24
                         )
                     }
                 }
