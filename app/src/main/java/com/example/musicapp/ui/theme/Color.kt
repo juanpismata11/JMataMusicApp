@@ -23,3 +23,13 @@ val surface = Color(0xFFE0E0E0)
 val purrrple = Color(0xFF4B0082)
 
 val grayy = Color(0xFF404040)
+
+val reproductorBack = Color(0xFF32213F)
+
+val lightPurple1 = Color(0xFFF2EEFF)
+val lighterPurple = Color(0xFFE6E0FF)
+
+val LightPurpleRadiante = listOf(
+    lighterPurple,
+    lightPurple1
+)

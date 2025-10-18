@@ -2,19 +2,15 @@ package com.example.musicapp.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,19 +21,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.example.musicapp.models.Album
-import com.example.musicapp.ui.theme.MusicAppTheme
 import com.example.musicapp.ui.theme.grayy
 
 @Composable
 fun TrackCard(
-    album: Album
+    name: String,
+    subname: String?,
+    image: String?
 ){
     Row(
         modifier = Modifier
@@ -55,7 +50,7 @@ fun TrackCard(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(album.image)
+                    .data(image)
                     .crossfade(true)
                     .build(),
                 contentDescription = "Imagen del álbum",
@@ -74,13 +69,13 @@ fun TrackCard(
                     .padding(start = 12.dp)
             ) {
                 Text(
-                    text = "Tales of Ithiria",
+                    text = name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
 
                 Text(
-                    text = "Haggard",
+                    text = subname.toString(),
                     fontSize = 12.sp,
                     modifier = Modifier.padding(top = 5.dp),
                     color = grayy
@@ -99,20 +94,20 @@ fun TrackCard(
     }
 }
 
-@Preview
-@Composable
-fun TrackCardPreview(){
-    val testProduct = Album(
-        title = "Tales of Ithiria",
-        artist = "Haggard",
-        description = "Camiseta cómoda y de alta calidad.",
-        image = "https://ejemplo.com/camiseta.png",
-        id = "1"
-    )
-
-    MusicAppTheme {
-        TrackCard(
-            album = testProduct
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun TrackCardPreview(){
+//    val testProduct = Album(
+//        title = "Tales of Ithiria",
+//        artist = "Haggard",
+//        description = "Camiseta cómoda y de alta calidad.",
+//        image = "https://ejemplo.com/camiseta.png",
+//        id = "1"
+//    )
+//
+//    MusicAppTheme {
+//        TrackCard(
+//            album = testProduct
+//        )
+//    }
+//}
