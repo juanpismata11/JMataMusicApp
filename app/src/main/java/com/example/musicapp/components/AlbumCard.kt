@@ -23,9 +23,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import com.example.musicapp.models.Album
+import com.example.musicapp.ui.theme.MusicAppTheme
 import com.example.musicapp.ui.theme.purrrple
 import com.example.musicapp.ui.theme.surface
 
@@ -33,15 +41,37 @@ import com.example.musicapp.ui.theme.surface
 //usa como parametros el titulo de la cancion, su artista y la foto
 //Si no carga la foto haz otro box, como se hace concha
 @Composable
-fun AlbumCard(){
+fun AlbumCard(
+    album: Album,
+    onClick: () -> Unit
+){
     Box(
         modifier = Modifier
             .width(240.dp)
             .height(200.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.Black),
+            .background(Color.Black), // fallback si no hay imagen
         contentAlignment = Alignment.BottomCenter
-    ){
+    ) {
+        if (!album.image.isNullOrEmpty()) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(album.image)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Imagen del álbum",
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(RoundedCornerShape(24.dp)),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color.DarkGray)
+            )
+        }
 
         Box(
             modifier = Modifier
@@ -49,55 +79,66 @@ fun AlbumCard(){
                 .height(100.dp)
                 .padding(20.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(purrrple.copy(alpha = 0.4f)),
-
-        ){
-
+                .background(purrrple.copy(alpha = 0.6f))
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(10.dp)
+                    modifier = Modifier.padding(8.dp)
                 ) {
                     Text(
-                        text = "Tales of Ithiria",
+                        text = album.title,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
-
                     Text(
-                        modifier = Modifier.padding(top = 4.dp),
-                        text = "Haggard",
-                        color = surface
+                        text = album.artist,
+                        color = surface,
+                        fontSize = 12.sp
                     )
                 }
 
                 Box(
                     modifier = Modifier
+                        .size(30.dp)
                         .clip(CircleShape)
                         .background(Color.White)
-                ){
-                    Icon(
-                        imageVector = Icons.Rounded.PlayArrow,
-                        contentDescription = "Reproducir"
+                )
+                { Icon (
+                    modifier = Modifier
+                        .size(25.dp)
+                        .align(Alignment.Center),
+                    imageVector = Icons.Rounded.PlayArrow,
+                    contentDescription = "Reproducir"
                     )
                 }
-
             }
-
         }
-
     }
 }
 
 @Preview
 @Composable
 fun AlbumCardPreview(){
-    AlbumCard()
+    val testProduct = Album(
+        title = "Tales of Ithiria",
+        artist = "Haggard",
+        description = "Camiseta cómoda y de alta calidad.",
+        image = "https://ejemplo.com/camiseta.png",
+        id = "1"
+    )
+
+    MusicAppTheme {
+        AlbumCard(
+            album = testProduct,
+            onClick = {}
+        )
+    }
+
+
 }
