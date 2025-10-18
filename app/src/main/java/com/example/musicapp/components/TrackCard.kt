@@ -1,6 +1,7 @@
 package com.example.musicapp.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,20 +27,26 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.musicapp.models.Album
 import com.example.musicapp.ui.theme.grayy
 
 @Composable
 fun TrackCard(
+    album: Album?,
     name: String,
     subname: String?,
-    image: String?
+    image: String?,
+    onClick: () -> Unit
 ){
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
-            .height(80.dp),
+            .height(80.dp)
+            .clickable{
+                onClick()
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

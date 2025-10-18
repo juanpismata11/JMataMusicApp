@@ -130,8 +130,6 @@ fun AlbumScreen(
                         CircularProgressIndicator()
                     }
                 } else if (error != null) {
-
-                } else {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -148,13 +146,29 @@ fun AlbumScreen(
 
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(album?.image)
+                                .data(testProduct.image)
                                 .crossfade(true)
                                 .build(),
                             contentDescription = "Imagen del álbum",
                             modifier = Modifier
                                 .matchParentSize(),
                             contentScale = ContentScale.Crop
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            Color(0x330066FF),
+                                            purrrple.copy(alpha = 0.4f)
+
+                                        ),
+                                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                                        end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
+                                    )
+                                )
                         )
 
                         Row(
@@ -189,49 +203,277 @@ fun AlbumScreen(
                                 )
                             }
                         }
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(bottom= 16.dp)
+                            ) {
+                                Text(
+                                    text = testProduct.title,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp
+
+                                )
+                                Text(
+                                    text = testProduct.artist,
+                                    color = Color.White
+
+                                )
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            brush = Brush.linearGradient(
+                                                colors = PurpleRadiante,
+                                                start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                                                end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
+                                            )
+                                        )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.PlayArrow,
+                                        contentDescription = "Reproducir",
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .align(Alignment.Center),
+                                        tint = Color.White
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clip(CircleShape)
+                                        .background(surface)
+                                ){
+                                    Icon(
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .align(Alignment.Center),
+                                        imageVector = Icons.Rounded.PlayArrow,
+                                        contentDescription = "Reproducir"
+                                    )
+                                }
+                            }
+                        }
+
+
+
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = RoundedCornerShape(16.dp),
+                                clip = false
+                            )
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color.White)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text ="About this album",
+                                color = purrrple,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+
+                            Text(
+                                modifier = Modifier.padding(top = 8.dp),
+                                text = testProduct.description,
+                                color = grayy
+
+                            )
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color.White),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
+                            text = "Artist:",
+                            color = purrrple,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            modifier = Modifier.padding(end = 12.dp),
+                            text = testProduct.artist,
+                            fontSize = 16.sp,
+                            color = grayy
+                        )
+                    }
+
+                    this@LazyColumn.items(10){ i->
+                        TrackCard(
+                            album = testProduct,
+                            name = "${testProduct.title} . Track ${i+1}",
+                            subname = testProduct.artist,
+                            image = testProduct.image,
+                            onClick = {}
+                        )
+                    }
+
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(350.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                    ){
+                        AsyncImage(
+                                model = "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg",
+                        contentDescription = "Imagen no disponible",
+                        modifier = Modifier
+                            .matchParentSize(),
+                        contentScale = ContentScale.Crop
+                        )
+
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(album?.image)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Imagen del álbum",
+                            modifier = Modifier
+                                .matchParentSize(),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            Color(0x330066FF),
+                                            purrrple.copy(alpha = 0.4f)
+
+                                        ),
+                                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                                        end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
+                                    )
+                                )
+                        )
 
                         Row(
                             modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Box(
+                            IconButton(
+                                onClick = { navController.popBackStack() },
                                 modifier = Modifier
-                                    .size(50.dp)
                                     .clip(CircleShape)
-                                    .background(
-                                        brush = Brush.linearGradient(
-                                            colors = PurpleRadiante,
-                                            start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                                            end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
-                                        )
-                                    )
+                                    .background(Color.Black)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Rounded.PlayArrow,
-                                    contentDescription = "Reproducir",
-                                    modifier = Modifier
-                                        .size(30.dp)
-                                        .align(Alignment.Center),
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Back",
                                     tint = Color.White
                                 )
                             }
-                            Box(
+
+                            IconButton(
+                                onClick = {},
                                 modifier = Modifier
-                                    .size(50.dp)
                                     .clip(CircleShape)
-                                    .background(surface)
-                            ){
+                                    .background(Color.Black)
+                            ) {
                                 Icon(
-                                    modifier = Modifier
-                                        .size(30.dp)
-                                        .align(Alignment.Center),
-                                    imageVector = Icons.Rounded.PlayArrow,
-                                    contentDescription = "Reproducir"
+                                    imageVector = Icons.Filled.FavoriteBorder,
+                                    contentDescription = "Back",
+                                    tint = Color.White
                                 )
                             }
                         }
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(16.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(bottom= 16.dp)
+                            ) {
+                                Column {
+                                    Text(
+                                        text = album?.title ?: "",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 24.sp
+
+                                    )
+                                    Text(
+                                        text = album?.artist ?: "",
+                                        color = Color.White
+
+                                    )
+                                }
+
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            brush = Brush.linearGradient(
+                                                colors = PurpleRadiante,
+                                                start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                                                end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
+                                            )
+                                        )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.PlayArrow,
+                                        contentDescription = "Reproducir",
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .align(Alignment.Center),
+                                        tint = Color.White
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clip(CircleShape)
+                                        .background(surface)
+                                ){
+                                    Icon(
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .align(Alignment.Center),
+                                        imageVector = Icons.Rounded.PlayArrow,
+                                        contentDescription = "Reproducir"
+                                    )
+                                }
+                            }
+                        }
+
+
 
                     }
 
@@ -290,9 +532,11 @@ fun AlbumScreen(
 
                     this@LazyColumn.items(10){ i->
                         TrackCard(
+                            album = album,
                             name = "${album?.title} . Track ${i+1}",
                             subname = album?.artist,
-                            image = album?.image
+                            image = album?.image,
+                            onClick = {}
                         )
                     }
             }

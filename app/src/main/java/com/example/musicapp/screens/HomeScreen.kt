@@ -66,149 +66,150 @@ fun HomeScreen(
         mutableStateOf<String?>(null)
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-    ) {
-        Box(
+            .background(
+                brush = Brush.linearGradient(
+                    colors = LightPurpleRadiante,
+                    start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                    end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
+                )
+            )
+    ){
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = LightPurpleRadiante,
-                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                        end = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY)
-                    )
-                )
-        ){
+                .padding(10.dp)
+                .padding(top = 40.dp)
+        ) {
+            Header()
 
-            Column(
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
-                    .padding(top = 40.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Header()
+                Text(
+                    text = "Albums",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
 
-                Row(
+                Text(
+                    text = "See more",
+                    color = dark,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            LaunchedEffect(true) {
+                loading = true
+                error = null
+                try {
+                    val retrofit = Retrofit
+                        .Builder()
+                        .baseUrl("https://music.juanfrausto.com/api/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+                    val service = retrofit.create(AlbumServices::class.java)
+                    val result = async(Dispatchers.IO) {
+                        service.getAllAlbums()
+                    }
+                    Log.i("HomeScreen", "Resultado: ${result.await()}")
+                    albums = result.await()
+                } catch (e: Exception) {
+                    error = e.message ?: "Error desconocido"
+                    Log.e("HomeScreen", "Error en API: $e")
+                } finally {
+                    loading = false
+                }
+            }
+
+            if (loading) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (error != null) {
+                AlbumCard(
+                    album = testProduct,
+                    onClick = {},
+                    paddingg = 24
+                )
+            } else {
+                LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp, horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Albums",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-
-                    Text(
-                        text = "See more",
-                        color = dark,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                LaunchedEffect(true) {
-                    loading = true
-                    error = null
-                    try {
-                        val retrofit = Retrofit
-                            .Builder()
-                            .baseUrl("https://music.juanfrausto.com/api/")
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build()
-                        val service = retrofit.create(AlbumServices::class.java)
-                        val result = async(Dispatchers.IO) {
-                            service.getAllAlbums()
-                        }
-                        Log.i("HomeScreen", "Resultado: ${result.await()}")
-                        albums = result.await()
-                    } catch (e: Exception) {
-                        error = e.message ?: "Error desconocido"
-                        Log.e("HomeScreen", "Error en API: $e")
-                    } finally {
-                        loading = false
-                    }
-                }
-
-                if (loading) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                } else if (error != null) {
-                    AlbumCard(
-                        album = testProduct,
-                        onClick = {},
-                        paddingg = 24
-                    )
-                } else {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 24.dp)
-                    ) {
-                        items(albums) { album ->
-                            AlbumCard(
-                                album = album,
-                                onClick = {
-                                    navController.navigate(AlbumDetailScreenRoute(album.id))
-                                },
-                                paddingg = 24
-                            )
-                        }
-                    }
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp, horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Recently played",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-
-                    Text(
-                        text = "See more",
-                        color = dark,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(end = 24.dp)
                 ) {
                     items(albums) { album ->
-                        TrackCard(
-                            name = album.title,
-                            subname = "${album.artist} . Popular Song",
-                            image = album.image
+                        AlbumCard(
+                            album = album,
+                            onClick = {
+                                navController.navigate(AlbumDetailScreenRoute(album.id))
+                            },
+                            paddingg = 24
                         )
                     }
                 }
-
             }
 
-            Column(
+            Row(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 10.dp)
-                    .padding(bottom = 40.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Reproductor()
+                Text(
+                    text = "Recently played",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+
+                Text(
+                    text = "See more",
+                    color = dark,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(albums) { album ->
+                    TrackCard(
+                        album = album,
+                        name = album.title,
+                        subname = "${album.artist} . Popular Song",
+                        image = album.image,
+                        onClick = {
+                            navController.navigate(AlbumDetailScreenRoute(album.id))
+                        }
+                    )
+                }
             }
 
         }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 10.dp)
+                .padding(bottom = 40.dp)
+        ) {
+            Reproductor()
+        }
+
     }
+
 
 
 
